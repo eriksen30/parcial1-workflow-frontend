@@ -1,0 +1,181 @@
+<div class="profile-page">
+  <div class="profile-header-card">
+    <div class="avatar-section">
+      <div class="avatar-large">{{ initials }}</div>
+      <div class="avatar-info">
+        <h2>{{ profile.name }}</h2>
+        <p>{{ profile.email }}</p>
+        <div class="header-badges">
+          <span class="role-badge">{{ profile.role }}</span>
+          <span class="dept-badge">{{ profile.department }}</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn-logout" (click)="logout()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <polyline points="16 17 21 12 16 7" />
+        <line x1="21" y1="12" x2="9" y2="12" />
+      </svg>
+      Cerrar sesión
+    </button>
+  </div>
+
+  <div class="profile-body">
+    <div class="tabs">
+      <button
+        class="tab"
+        [class.active]="activeTab === 'info'"
+        (click)="activeTab = 'info'"
+      >
+        Información personal
+      </button>
+      <button
+        class="tab"
+        [class.active]="activeTab === 'security'"
+        (click)="activeTab = 'security'"
+      >
+        Seguridad
+      </button>
+    </div>
+
+    @if (activeTab === "info") {
+      <div class="tab-content">
+        <div class="form-grid">
+          <div class="field">
+            <label>Nombre completo</label>
+            <input type="text" [(ngModel)]="editProfile.name" />
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="editProfile.email" />
+          </div>
+          <div class="field">
+            <label>Teléfono</label>
+            <input type="text" [(ngModel)]="editProfile.phone" />
+          </div>
+          <div class="field">
+            <label>Departamento</label>
+            <select [(ngModel)]="editProfile.department">
+              @for (dep of departments; track dep) {
+                <option [value]="dep">{{ dep }}</option>
+              }
+            </select>
+          </div>
+          <div class="field readonly">
+            <label>Rol</label>
+            <div class="readonly-value">
+              <span class="role-badge">{{ profile.role }}</span>
+              <span class="readonly-hint"
+                >El rol solo puede cambiarlo un administrador</span
+              >
+            </div>
+          </div>
+          <div class="field readonly">
+            <label>Miembro desde</label>
+            <div class="readonly-value">
+              <span>{{ profile.joinDate }}</span>
+            </div>
+          </div>
+        </div>
+
+        @if (savedSuccess) {
+          <div class="alert success">✓ Perfil actualizado correctamente</div>
+        }
+
+        <div class="form-footer">
+          <button
+            class="btn-primary"
+            (click)="saveProfile()"
+            [disabled]="isSaving"
+          >
+            @if (isSaving) {
+              <span class="spinner"></span>
+            } @else {
+              Guardar cambios
+            }
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (activeTab === "security") {
+      <div class="tab-content">
+        <div class="security-section">
+          <h4>Cambiar contraseña</h4>
+          <p>Usá una contraseña segura de al menos 6 caracteres.</p>
+        </div>
+
+        <div class="form-grid single">
+          <div class="field">
+            <label>Contraseña actual</label>
+            <div class="password-input">
+              <input
+                [type]="showCurrentPassword ? 'text' : 'password'"
+                [(ngModel)]="passwordForm.current"
+                placeholder="••••••••"
+              />
+              <button
+                class="toggle-pass"
+                (click)="showCurrentPassword = !showCurrentPassword"
+              >
+                {{ showCurrentPassword ? "🙈" : "👁️" }}
+              </button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Nueva contraseña</label>
+            <div class="password-input">
+              <input
+                [type]="showNewPassword ? 'text' : 'password'"
+                [(ngModel)]="passwordForm.newPass"
+                placeholder="••••••••"
+              />
+              <button
+                class="toggle-pass"
+                (click)="showNewPassword = !showNewPassword"
+              >
+                {{ showNewPassword ? "🙈" : "👁️" }}
+              </button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Confirmar nueva contraseña</label>
+            <input
+              type="password"
+              [(ngModel)]="passwordForm.confirm"
+              placeholder="••••••••"
+            />
+          </div>
+        </div>
+
+        @if (passwordError) {
+          <div class="alert error">⚠️ {{ passwordError }}</div>
+        }
+        @if (passwordSuccess) {
+          <div class="alert success">
+            ✓ Contraseña actualizada correctamente
+          </div>
+        }
+
+        <div class="form-footer">
+          <button class="btn-primary" (click)="changePassword()">
+            Cambiar contraseña
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

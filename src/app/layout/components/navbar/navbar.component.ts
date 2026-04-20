@@ -21,6 +21,7 @@ export class NavbarComponent implements OnInit {
     '/users': 'Usuarios',
     '/roles': 'Roles',
     '/notifications': 'Notificaciones',
+    '/profile': 'Mi Perfil',
   };
 
   constructor(private readonly router: Router) {}
@@ -45,6 +46,10 @@ export class NavbarComponent implements OnInit {
       return;
     }
     this.currentPage = this.pageNames[base] ?? 'GestiónFlow';
+  }
+
+  goToProfile() {
+    this.router.navigate(['/profile']);
   }
 
   logout() {

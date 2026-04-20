@@ -59,10 +59,20 @@ export const routes: Routes = [
             (m) => m.NOTIFICATIONS_ROUTES,
           ),
       },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/auth/pages/profile/profile.component').then(
+            (m) => m.ProfileComponent,
+          ),
+      },
     ],
   },
   {
     path: '**',
-    redirectTo: 'auth/login',
+    loadComponent: () =>
+      import('./shared/components/not-found/not-found.component').then(
+        (m) => m.NotFoundComponent,
+      ),
   },
 ];
