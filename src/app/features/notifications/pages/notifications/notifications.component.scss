@@ -1,0 +1,227 @@
+.notifications-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 800px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1f3c;
+    margin: 0 0 4px;
+  }
+  p {
+    color: #718096;
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+// ── Filtros ──────────────────────────────────
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 7px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 20px;
+  background: white;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #2d3561;
+    color: #2d3561;
+  }
+  &.active {
+    background: #2d3561;
+    color: white;
+    border-color: #2d3561;
+  }
+}
+
+.unread-badge {
+  margin-left: auto;
+  background: #ebf4ff;
+  color: #2b6cb0;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+// ── Lista ────────────────────────────────────
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notif-card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1.5px solid transparent;
+  position: relative;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+
+  &.unread {
+    border-color: #bee3f8;
+    background: #f0f9ff;
+  }
+}
+
+.notif-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+
+  &.tramite {
+    background: #ebf8ff;
+  }
+  &.aprobacion {
+    background: #f0fff4;
+  }
+  &.rechazo {
+    background: #fff5f5;
+  }
+  &.asignacion {
+    background: #fefcbf;
+  }
+  &.sistema {
+    background: #f7fafc;
+  }
+}
+
+.notif-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 6px;
+
+  h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1f3c;
+    margin: 0;
+  }
+}
+
+.notif-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.notif-time {
+  font-size: 12px;
+  color: #a0aec0;
+  white-space: nowrap;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #a0aec0;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #fed7d7;
+    color: #e53e3e;
+  }
+}
+
+.notif-content p {
+  font-size: 13px;
+  color: #4a5568;
+  margin: 0 0 6px;
+  line-height: 1.5;
+}
+
+.notif-user {
+  font-size: 12px;
+  color: #a0aec0;
+  font-weight: 500;
+}
+
+.unread-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3b82f6;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+// ── Empty ────────────────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 60px;
+  color: #a0aec0;
+  background: white;
+  border-radius: 16px;
+
+  span {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 12px;
+  }
+  p {
+    font-size: 15px;
+    margin: 0;
+  }
+}
+
+// ── Botones ──────────────────────────────────
+.btn-secondary {
+  padding: 10px 20px;
+  background: #f7fafc;
+  color: #4a5568;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover {
+    background: #edf2f7;
+  }
+}

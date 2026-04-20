@@ -1,0 +1,68 @@
+<div class="login-wrapper">
+  <div class="login-left">
+    <div class="brand">
+      <div class="brand-icon">⚙️</div>
+      <h1>GestiónFlow</h1>
+      <p>Sistema de Gestión de Trámites</p>
+    </div>
+    <div class="features">
+      <div class="feature-item">
+        <span class="icon">🔄</span>
+        <span>Motor de Workflow automatizado</span>
+      </div>
+      <div class="feature-item">
+        <span class="icon">👥</span>
+        <span>Gestión de usuarios y roles</span>
+      </div>
+      <div class="feature-item">
+        <span class="icon">📊</span>
+        <span>Monitoreo en tiempo real</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-card">
+      <div class="card-header">
+        <h2>Bienvenido</h2>
+        <p>Ingresá tus credenciales para continuar</p>
+      </div>
+
+      <div class="form">
+        <div class="field">
+          <label>Usuario</label>
+          <input
+            type="text"
+            placeholder="Tu nombre de usuario"
+            [(ngModel)]="username"
+            (keyup.enter)="onLogin()"
+          />
+        </div>
+
+        <div class="field">
+          <label>Contraseña</label>
+          <input
+            type="password"
+            placeholder="••••••••"
+            [(ngModel)]="password"
+            (keyup.enter)="onLogin()"
+          />
+        </div>
+
+        @if (errorMessage) {
+          <div class="error-msg">⚠️ {{ errorMessage }}</div>
+        }
+
+        <button class="btn-login" (click)="onLogin()" [disabled]="isLoading">
+          @if (!isLoading) {
+            <span>Ingresar</span>
+          } @else {
+            <span class="spinner"></span>
+          }
+        </button>
+      </div>
+
+      <p class="hint">Credenciales de prueba: <strong>admin / 1234</strong></p>
+    </div>
+  </div>
+</div>

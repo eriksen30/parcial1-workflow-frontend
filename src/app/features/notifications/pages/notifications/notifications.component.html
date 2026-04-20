@@ -1,0 +1,102 @@
+<div class="notifications-page">
+  <div class="page-header">
+    <div>
+      <h2>Notificaciones</h2>
+      <p>Centro de notificaciones del sistema</p>
+    </div>
+    @if (unreadCount > 0) {
+      <button class="btn-secondary" (click)="markAllAsRead()">
+        ✓ Marcar todas como leídas
+      </button>
+    }
+  </div>
+
+  <div class="filter-bar">
+    <button
+      class="filter-btn"
+      [class.active]="filterType === ''"
+      (click)="filterType = ''"
+    >
+      Todas
+    </button>
+    <button
+      class="filter-btn"
+      [class.active]="filterType === 'tramite'"
+      (click)="filterType = 'tramite'"
+    >
+      🔄 Trámites
+    </button>
+    <button
+      class="filter-btn"
+      [class.active]="filterType === 'aprobacion'"
+      (click)="filterType = 'aprobacion'"
+    >
+      ✅ Aprobaciones
+    </button>
+    <button
+      class="filter-btn"
+      [class.active]="filterType === 'rechazo'"
+      (click)="filterType = 'rechazo'"
+    >
+      ❌ Rechazos
+    </button>
+    <button
+      class="filter-btn"
+      [class.active]="filterType === 'asignacion'"
+      (click)="filterType = 'asignacion'"
+    >
+      📋 Asignaciones
+    </button>
+    <button
+      class="filter-btn"
+      [class.active]="filterType === 'sistema'"
+      (click)="filterType = 'sistema'"
+    >
+      ⚙️ Sistema
+    </button>
+
+    @if (unreadCount > 0) {
+      <span class="unread-badge">{{ unreadCount }} sin leer</span>
+    }
+  </div>
+
+  <div class="notifications-list">
+    @for (notif of filteredNotifications; track notif.id) {
+      <div
+        class="notif-card"
+        [class.unread]="!notif.read"
+        (click)="markAsRead(notif)"
+      >
+        <div class="notif-icon" [class]="notif.type">
+          {{ getIcon(notif.type) }}
+        </div>
+        <div class="notif-content">
+          <div class="notif-header">
+            <h4>{{ notif.title }}</h4>
+            <div class="notif-meta">
+              <span class="notif-time">{{ notif.time }}</span>
+              <button
+                class="delete-btn"
+                (click)="$event.stopPropagation(); delete(notif.id)"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+          <p>{{ notif.message }}</p>
+          <span class="notif-user">{{ notif.user }}</span>
+        </div>
+        @if (!notif.read) {
+          <div class="unread-dot"></div>
+        }
+      </div>
+    }
+
+    @if (filteredNotifications.length === 0) {
+      <div class="empty-state">
+        <span>🔔</span>
+        <p>No hay notificaciones en esta categoría</p>
+      </div>
+    }
+  </div>
+</div>

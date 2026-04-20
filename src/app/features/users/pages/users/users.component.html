@@ -1,0 +1,135 @@
+<div class="users-page">
+  <div class="page-header">
+    <div>
+      <h2>Gestión de Usuarios</h2>
+      <p>Administrá los usuarios y sus roles en el sistema</p>
+    </div>
+    <button class="btn-primary" (click)="openCreate()">+ Nuevo Usuario</button>
+  </div>
+
+  <div class="toolbar">
+    <input
+      class="search-input"
+      type="text"
+      placeholder="🔍 Buscar por nombre, email, rol..."
+      [(ngModel)]="searchTerm"
+    />
+    <div class="counters">
+      <span class="counter"
+        >Total: <strong>{{ users.length }}</strong></span
+      >
+      <span class="counter"
+        >Activos: <strong>{{ activeCount }}</strong></span
+      >
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Departamento</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of filteredUsers; track user.id) {
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="avatar">{{ user.name[0] }}</div>
+                {{ user.name }}
+              </div>
+            </td>
+            <td class="muted">{{ user.email }}</td>
+            <td>
+              <span class="role-badge" [class]="user.role | lowercase">
+                {{ user.role }}
+              </span>
+            </td>
+            <td>{{ user.department }}</td>
+            <td>
+              <div class="actions">
+                <button
+                  class="btn-icon edit"
+                  (click)="openEdit(user)"
+                  title="Editar"
+                >
+                  ✏️
+                </button>
+                <button
+                  class="btn-icon delete"
+                  (click)="delete(user.id)"
+                  title="Eliminar"
+                >
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+        @if (filteredUsers.length === 0) {
+          <tr>
+            <td colspan="5" class="empty">No se encontraron usuarios</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (showModal) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing ? "Editar Usuario" : "Nuevo Usuario" }}</h3>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label>Nombre completo</label>
+          <input
+            type="text"
+            placeholder="Ej: Juan Pérez"
+            [(ngModel)]="currentUser.name"
+          />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input
+            type="email"
+            placeholder="juan@empresa.com"
+            [(ngModel)]="currentUser.email"
+          />
+        </div>
+        <div class="field">
+          <label>Rol</label>
+          <select [(ngModel)]="currentUser.role">
+            @for (role of roles; track role) {
+              <option [value]="role">{{ role }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label>Departamento</label>
+          <select [(ngModel)]="currentUser.department">
+            @for (dep of departments; track dep) {
+              <option [value]="dep">{{ dep }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button class="btn-primary" (click)="save()">
+          {{ isEditing ? "Guardar cambios" : "Crear usuario" }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

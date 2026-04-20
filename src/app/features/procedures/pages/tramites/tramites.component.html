@@ -1,0 +1,267 @@
+<div class="tramites-page">
+  <div class="page-header">
+    <div>
+      <h2>Gestión de Trámites</h2>
+      <p>Seguimiento y control de todos los trámites del sistema</p>
+    </div>
+    <button class="btn-primary" (click)="openCreate()">+ Nuevo Trámite</button>
+  </div>
+
+  <div class="status-cards">
+    <div
+      class="status-card pendiente"
+      (click)="filterStatus = filterStatus === 'pendiente' ? '' : 'pendiente'"
+    >
+      <span class="status-count">{{ countByStatus.pendiente }}</span>
+      <span class="status-label">Pendientes</span>
+    </div>
+    <div
+      class="status-card en-proceso"
+      (click)="filterStatus = filterStatus === 'en proceso' ? '' : 'en proceso'"
+    >
+      <span class="status-count">{{ countByStatus.enProceso }}</span>
+      <span class="status-label">En Proceso</span>
+    </div>
+    <div
+      class="status-card aprobado"
+      (click)="filterStatus = filterStatus === 'aprobado' ? '' : 'aprobado'"
+    >
+      <span class="status-count">{{ countByStatus.aprobado }}</span>
+      <span class="status-label">Aprobados</span>
+    </div>
+    <div
+      class="status-card rechazado"
+      (click)="filterStatus = filterStatus === 'rechazado' ? '' : 'rechazado'"
+    >
+      <span class="status-count">{{ countByStatus.rechazado }}</span>
+      <span class="status-label">Rechazados</span>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input
+      class="search-input"
+      type="text"
+      placeholder="🔍 Buscar por título, código o solicitante..."
+      [(ngModel)]="searchTerm"
+    />
+    @if (filterStatus) {
+      <button class="clear-filter" (click)="filterStatus = ''">
+        ✕ Limpiar filtro
+      </button>
+    }
+  </div>
+
+  <div class="table-card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Título</th>
+          <th>Solicitante</th>
+          <th>Departamento</th>
+          <th>Prioridad</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (tramite of filteredTramites; track tramite.id) {
+          <tr (click)="openDetail(tramite)" class="clickable-row">
+            <td>
+              <span class="code-badge">{{ tramite.code }}</span>
+            </td>
+            <td class="title-cell">{{ tramite.title }}</td>
+            <td>
+              <div class="user-cell">
+                <div class="mini-avatar">{{ tramite.solicitante[0] }}</div>
+                {{ tramite.solicitante }}
+              </div>
+            </td>
+            <td class="muted">{{ tramite.department }}</td>
+            <td>
+              <span class="priority-badge" [class]="tramite.priority">
+                {{ tramite.priority }}
+              </span>
+            </td>
+            <td>
+              <span
+                class="status-badge"
+                [class]="tramite.status.replace(' ', '-')"
+              >
+                {{ tramite.status }}
+              </span>
+            </td>
+            <td class="muted">{{ tramite.createdAt }}</td>
+            <td>
+              <div class="actions" (click)="$event.stopPropagation()">
+                <button class="btn-icon edit" (click)="openEdit(tramite)">
+                  ✏️
+                </button>
+                <button class="btn-icon delete" (click)="delete(tramite.id)">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+        @if (filteredTramites.length === 0) {
+          <tr>
+            <td colspan="8" class="empty">No se encontraron trámites</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (showDetail && selectedTramite) {
+  <div class="modal-overlay" (click)="closeDetail()">
+    <div class="modal modal-wide" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="detail-title">
+          <span class="code-badge">{{ selectedTramite.code }}</span>
+          <h3>{{ selectedTramite.title }}</h3>
+        </div>
+        <button class="close-btn" (click)="closeDetail()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Solicitante</label>
+            <span>{{ selectedTramite.solicitante }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Departamento</label>
+            <span>{{ selectedTramite.department }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Prioridad</label>
+            <span class="priority-badge" [class]="selectedTramite.priority">{{
+              selectedTramite.priority
+            }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Fecha de creación</label>
+            <span>{{ selectedTramite.createdAt }}</span>
+          </div>
+          <div class="detail-item full">
+            <label>Descripción</label>
+            <span>{{ selectedTramite.description }}</span>
+          </div>
+        </div>
+
+        <div class="status-section">
+          <label>Cambiar estado del trámite</label>
+          <div class="status-actions">
+            <button
+              class="status-btn pendiente"
+              (click)="changeStatus(selectedTramite, 'pendiente')"
+            >
+              ⏳ Pendiente
+            </button>
+            <button
+              class="status-btn en-proceso"
+              (click)="changeStatus(selectedTramite, 'en proceso')"
+            >
+              🔄 En Proceso
+            </button>
+            <button
+              class="status-btn aprobado"
+              (click)="changeStatus(selectedTramite, 'aprobado')"
+            >
+              ✅ Aprobado
+            </button>
+            <button
+              class="status-btn rechazado"
+              (click)="changeStatus(selectedTramite, 'rechazado')"
+            >
+              ❌ Rechazado
+            </button>
+          </div>
+          <div class="current-status">
+            Estado actual:
+            <span
+              class="status-badge"
+              [class]="selectedTramite.status.replace(' ', '-')"
+            >
+              {{ selectedTramite.status }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeDetail()">Cerrar</button>
+        <button class="btn-primary" (click)="openEdit(selectedTramite)">
+          ✏️ Editar
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showModal) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing ? "Editar Trámite" : "Nuevo Trámite" }}</h3>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label>Título</label>
+          <input
+            type="text"
+            placeholder="Ej: Solicitud de vacaciones"
+            [(ngModel)]="currentTramite.title"
+          />
+        </div>
+        <div class="field">
+          <label>Descripción</label>
+          <textarea
+            placeholder="Descripción detallada del trámite..."
+            [(ngModel)]="currentTramite.description"
+            rows="3"
+          ></textarea>
+        </div>
+        <div class="field">
+          <label>Departamento destino</label>
+          <select [(ngModel)]="currentTramite.department">
+            @for (dep of departments; track dep) {
+              <option [value]="dep">{{ dep }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label>Prioridad</label>
+          <select [(ngModel)]="currentTramite.priority">
+            @for (p of priorities; track p) {
+              <option [value]="p">{{ p }}</option>
+            }
+          </select>
+        </div>
+        @if (isEditing) {
+          <div class="field">
+            <label>Estado</label>
+            <select [(ngModel)]="currentTramite.status">
+              @for (s of statuses; track s) {
+                <option [value]="s">{{ s }}</option>
+              }
+            </select>
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button class="btn-primary" (click)="save()">
+          {{ isEditing ? "Guardar cambios" : "Crear trámite" }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

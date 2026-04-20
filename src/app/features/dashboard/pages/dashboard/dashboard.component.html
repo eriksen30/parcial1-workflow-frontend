@@ -1,0 +1,112 @@
+<div class="dashboard">
+  <div class="stats-grid">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card">
+        <div class="stat-left">
+          <div class="stat-icon" [style.background]="stat.bg">
+            <span>{{ stat.icon }}</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">{{ stat.label }}</span>
+            <span
+              class="stat-trend"
+              [class.up]="stat.trendUp"
+              [class.down]="!stat.trendUp"
+            >
+              {{ stat.trendUp ? "↑" : "↓" }} {{ stat.trend }}
+            </span>
+          </div>
+        </div>
+        <span class="stat-value" [style.color]="stat.color">{{
+          stat.value
+        }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="main-grid">
+    <div class="section activity-section">
+      <div class="section-header">
+        <h3>Actividad Reciente</h3>
+        <span class="badge">{{ recentActivity.length }} registros</span>
+      </div>
+      <div class="activity-list">
+        @for (item of recentActivity; track item.time) {
+          <div class="activity-item">
+            <div class="activity-avatar">{{ item.user[0] }}</div>
+            <div class="activity-content">
+              <div class="activity-top">
+                <span class="activity-user">{{ item.user }}</span>
+                <span class="activity-time">{{ item.time }}</span>
+              </div>
+              <span class="activity-action">{{ item.action }}</span>
+              <div class="activity-bottom">
+                <span class="module-tag">{{ item.module }}</span>
+                <span
+                  class="status-dot"
+                  [class]="item.status.replace(' ', '-')"
+                >
+                  {{ item.status }}
+                </span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="side-sections">
+      <div class="section">
+        <div class="section-header">
+          <h3>Acciones Rápidas</h3>
+        </div>
+        <div class="quick-actions">
+          @for (action of quickActions; track action.label) {
+            <button class="quick-action-btn" (click)="navigate(action.route)">
+              <div
+                class="qa-icon"
+                [style.background]="action.color + '18'"
+                [style.color]="action.color"
+              >
+                {{ action.icon }}
+              </div>
+              <div class="qa-text">
+                <span class="qa-label">{{ action.label }}</span>
+                <span class="qa-desc">{{ action.description }}</span>
+              </div>
+              <span class="qa-arrow">→</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h3>Estado del Sistema</h3>
+        </div>
+        <div class="system-status">
+          <div class="status-item">
+            <div class="status-indicator online"></div>
+            <span class="status-label">Frontend Angular</span>
+            <span class="status-value ok">Operativo</span>
+          </div>
+          <div class="status-item">
+            <div class="status-indicator pending"></div>
+            <span class="status-label">Backend Spring Boot</span>
+            <span class="status-value pending">Pendiente</span>
+          </div>
+          <div class="status-item">
+            <div class="status-indicator pending"></div>
+            <span class="status-label">Motor de Workflow</span>
+            <span class="status-value pending">Pendiente</span>
+          </div>
+          <div class="status-item">
+            <div class="status-indicator pending"></div>
+            <span class="status-label">Base de Datos MongoDB</span>
+            <span class="status-value pending">Pendiente</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,265 @@
+<div class="policies-page">
+  <div class="page-header">
+    <div>
+      <h2>Políticas de Negocio</h2>
+      <p>Definí los flujos de trabajo para cada proceso organizacional</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="openEditor()">
+        🔀 Nuevo Flujo
+      </button>
+      <button class="btn-primary" (click)="openCreate()">
+        + Nueva Política
+      </button>
+    </div>
+  </div>
+
+  <div class="summary-bar">
+    <div class="summary-item">
+      <span class="summary-value">{{ policies.length }}</span>
+      <span class="summary-label">Total políticas</span>
+    </div>
+    <div class="divider"></div>
+    <div class="summary-item">
+      <span class="summary-value activa">{{ activeCount }}</span>
+      <span class="summary-label">Activas</span>
+    </div>
+    <div class="divider"></div>
+    <div class="summary-item">
+      <span class="summary-value borrador">{{ draftCount }}</span>
+      <span class="summary-label">En borrador</span>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input
+      class="search-input"
+      type="text"
+      placeholder="🔍 Buscar política..."
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  <div class="policies-grid">
+    @for (policy of filteredPolicies; track policy.id) {
+      <div class="policy-card" (click)="openDetail(policy)">
+        <div class="policy-card-header">
+          <div class="type-icon" [class]="policy.type">
+            @if (policy.type === "secuencial") {
+              🔗
+            }
+            @if (policy.type === "condicional") {
+              🔀
+            }
+            @if (policy.type === "paralelo") {
+              ⚡
+            }
+          </div>
+          <div class="policy-badges">
+            <span class="type-badge" [class]="policy.type">{{
+              policy.type
+            }}</span>
+            <span class="status-badge" [class]="policy.status">{{
+              policy.status
+            }}</span>
+          </div>
+          <div class="card-actions" (click)="$event.stopPropagation()">
+            <button
+              class="btn-icon flow"
+              (click)="openEditor(policy)"
+              title="Editor de flujo"
+            >
+              🔀
+            </button>
+            <button
+              class="btn-icon edit"
+              (click)="openEdit(policy)"
+              title="Editar"
+            >
+              ✏️
+            </button>
+            <button
+              class="btn-icon delete"
+              (click)="delete(policy.id)"
+              title="Eliminar"
+            >
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <h3 class="policy-name">{{ policy.name }}</h3>
+        <p class="policy-description">{{ policy.description }}</p>
+
+        <div class="policy-footer">
+          <div class="policy-meta">
+            <span>🏢 {{ policy.department }}</span>
+            <span>📋 {{ policy.steps.length }} pasos</span>
+            <span>🔄 {{ policy.tramiteCount }} trámites</span>
+          </div>
+        </div>
+
+        <div class="steps-preview">
+          @for (step of policy.steps.slice(0, 3); track step.order) {
+            <div class="step-pill">
+              <span class="step-num">{{ step.order }}</span>
+              <span class="step-name">{{ step.activity || "Sin nombre" }}</span>
+            </div>
+          }
+          @if (policy.steps.length > 3) {
+            <div class="step-pill more">+{{ policy.steps.length - 3 }} más</div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+@if (showDetail && selectedPolicy) {
+  <div class="modal-overlay" (click)="closeDetail()">
+    <div class="modal modal-wide" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h3>{{ selectedPolicy.name }}</h3>
+          <div class="header-badges">
+            <span class="type-badge" [class]="selectedPolicy.type">{{
+              selectedPolicy.type
+            }}</span>
+            <span class="status-badge" [class]="selectedPolicy.status">{{
+              selectedPolicy.status
+            }}</span>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeDetail()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="detail-description">{{ selectedPolicy.description }}</p>
+        <div class="detail-meta">
+          <span>🏢 {{ selectedPolicy.department }}</span>
+          <span>📅 Creada: {{ selectedPolicy.createdAt }}</span>
+          <span>🔄 {{ selectedPolicy.tramiteCount }} trámites activos</span>
+        </div>
+        <div class="workflow-title">Flujo de trabajo</div>
+        <div class="workflow-steps">
+          @for (step of selectedPolicy.steps; track step.order) {
+            <div class="workflow-step">
+              <div class="step-circle">{{ step.order }}</div>
+              @if (!$last) {
+                <div class="step-line"></div>
+              }
+              <div class="step-info">
+                <span class="step-activity">{{ step.activity }}</span>
+                <span class="step-dept"
+                  >{{ step.department }} — {{ step.responsible }}</span
+                >
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeDetail()">Cerrar</button>
+        <button class="btn-secondary" (click)="openEditor(selectedPolicy)">
+          🔀 Abrir editor
+        </button>
+        <button class="btn-primary" (click)="openEdit(selectedPolicy)">
+          ✏️ Editar
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showModal) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal modal-wide" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing ? "Editar Política" : "Nueva Política" }}</h3>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="field">
+            <label>Nombre</label>
+            <input
+              type="text"
+              placeholder="Ej: Proceso de compras"
+              [(ngModel)]="currentPolicy.name"
+            />
+          </div>
+          <div class="field">
+            <label>Departamento</label>
+            <select [(ngModel)]="currentPolicy.department">
+              @for (dep of departments; track dep) {
+                <option [value]="dep">{{ dep }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Tipo de flujo</label>
+            <select [(ngModel)]="currentPolicy.type">
+              @for (type of types; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label>Estado</label>
+            <select [(ngModel)]="currentPolicy.status">
+              @for (s of statuses; track s) {
+                <option [value]="s">{{ s }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Descripción</label>
+          <textarea
+            rows="2"
+            placeholder="Descripción del proceso..."
+            [(ngModel)]="currentPolicy.description"
+          ></textarea>
+        </div>
+        <div class="steps-editor">
+          <div class="steps-header">
+            <label>Pasos del flujo</label>
+            <button class="btn-add-step" (click)="addStep()">
+              + Agregar paso
+            </button>
+          </div>
+          @for (step of currentPolicy.steps; track $index) {
+            <div class="step-row">
+              <div class="step-number">{{ $index + 1 }}</div>
+              <input
+                type="text"
+                placeholder="Actividad"
+                [(ngModel)]="step.activity"
+              />
+              <select [(ngModel)]="step.department">
+                @for (dep of departments; track dep) {
+                  <option [value]="dep">{{ dep }}</option>
+                }
+              </select>
+              <input
+                type="text"
+                placeholder="Responsable"
+                [(ngModel)]="step.responsible"
+              />
+              <button class="remove-step" (click)="removeStep($index)">
+                ✕
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button class="btn-primary" (click)="save()">
+          {{ isEditing ? "Guardar cambios" : "Crear política" }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

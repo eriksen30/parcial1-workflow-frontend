@@ -1,0 +1,194 @@
+.login-wrapper {
+  display: flex;
+  height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+// ── Panel izquierdo ──────────────────────────
+.login-left {
+  flex: 1;
+  background: linear-gradient(145deg, #1a1f3c 0%, #2d3561 60%, #1e4d8c 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+  color: white;
+
+  .brand {
+    margin-bottom: 60px;
+
+    .brand-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      letter-spacing: -0.5px;
+    }
+
+    p {
+      font-size: 15px;
+      opacity: 0.65;
+      margin: 0;
+    }
+  }
+
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 15px;
+      opacity: 0.85;
+
+      .icon {
+        font-size: 20px;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// ── Panel derecho ────────────────────────────
+.login-right {
+  width: 480px;
+  background: #f4f6fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.login-card {
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  padding: 48px 40px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+
+  .card-header {
+    margin-bottom: 36px;
+
+    h2 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1a1f3c;
+      margin: 0 0 8px;
+    }
+
+    p {
+      color: #8892a4;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+}
+
+// ── Formulario ───────────────────────────────
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a5568;
+  }
+
+  input {
+    padding: 12px 16px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s;
+    color: #1a1f3c;
+
+    &:focus {
+      border-color: #2d3561;
+    }
+
+    &::placeholder {
+      color: #c0c9d6;
+    }
+  }
+}
+
+.error-msg {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.btn-login {
+  padding: 14px;
+  background: linear-gradient(135deg, #2d3561, #1e4d8c);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hint {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12px;
+  color: #a0aec0;
+}

@@ -1,0 +1,135 @@
+<div class="departments-page">
+  <div class="page-header">
+    <div>
+      <h2>Gestión de Departamentos</h2>
+      <p>Administrá los departamentos y sus responsables</p>
+    </div>
+    <button class="btn-primary" (click)="openCreate()">
+      + Nuevo Departamento
+    </button>
+  </div>
+
+  <div class="summary-bar">
+    <div class="summary-item">
+      <span class="summary-value">{{ departments.length }}</span>
+      <span class="summary-label">Departamentos</span>
+    </div>
+    <div class="divider"></div>
+    <div class="summary-item">
+      <span class="summary-value">{{ totalEmployees }}</span>
+      <span class="summary-label">Funcionarios en total</span>
+    </div>
+    <div class="divider"></div>
+    <div class="summary-item">
+      <span class="summary-value">{{ totalActiveProcesses }}</span>
+      <span class="summary-label">Trámites activos</span>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input
+      class="search-input"
+      type="text"
+      placeholder="🔍 Buscar departamento o responsable..."
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  <div class="departments-grid">
+    @for (dept of filteredDepartments; track dept.id) {
+      <div class="dept-card">
+        <div class="dept-header">
+          <div class="dept-icon">{{ dept.name[0] }}</div>
+          <div class="dept-actions">
+            <button class="btn-icon edit" (click)="openEdit(dept)">✏️</button>
+            <button class="btn-icon delete" (click)="delete(dept.id)">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <h3 class="dept-name">{{ dept.name }}</h3>
+        <p class="dept-description">{{ dept.description }}</p>
+
+        <div class="dept-meta">
+          <div class="meta-item">
+            <span class="meta-icon">👤</span>
+            <span>{{ dept.manager }}</span>
+          </div>
+        </div>
+
+        <div class="dept-stats">
+          <div class="stat">
+            <span class="stat-value">{{ dept.employeeCount }}</span>
+            <span class="stat-label">Funcionarios</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-value">{{ dept.activeProcesses }}</span>
+            <span class="stat-label">Trámites activos</span>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (filteredDepartments.length === 0) {
+      <div class="empty-state">
+        <span>🏢</span>
+        <p>No se encontraron departamentos</p>
+      </div>
+    }
+  </div>
+</div>
+
+@if (showModal) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing ? "Editar Departamento" : "Nuevo Departamento" }}</h3>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label>Nombre del departamento</label>
+          <input
+            type="text"
+            placeholder="Ej: Contabilidad"
+            [(ngModel)]="currentDepartment.name"
+          />
+        </div>
+        <div class="field">
+          <label>Responsable</label>
+          <input
+            type="text"
+            placeholder="Nombre del responsable"
+            [(ngModel)]="currentDepartment.manager"
+          />
+        </div>
+        <div class="field">
+          <label>Descripción</label>
+          <input
+            type="text"
+            placeholder="Descripción breve del departamento"
+            [(ngModel)]="currentDepartment.description"
+          />
+        </div>
+        <div class="field">
+          <label>Cantidad de funcionarios</label>
+          <input
+            type="number"
+            placeholder="0"
+            [(ngModel)]="currentDepartment.employeeCount"
+          />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button class="btn-primary" (click)="save()">
+          {{ isEditing ? "Guardar cambios" : "Crear departamento" }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

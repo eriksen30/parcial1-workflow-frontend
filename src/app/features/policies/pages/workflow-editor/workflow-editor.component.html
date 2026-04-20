@@ -1,0 +1,68 @@
+<div class="editor-wrapper">
+  <div class="editor-toolbar">
+    <div class="toolbar-left">
+      <button class="btn-back" (click)="goBack()">← Volver</button>
+      <div class="policy-name-input">
+        <input
+          type="text"
+          [(ngModel)]="policyName"
+          placeholder="Nombre de la política"
+        />
+      </div>
+      <select class="status-select" [(ngModel)]="policyStatus">
+        <option value="borrador">Borrador</option>
+        <option value="activa">Activa</option>
+        <option value="inactiva">Inactiva</option>
+      </select>
+    </div>
+
+    <div class="toolbar-center">
+      <button class="tool-btn" (click)="zoomOut()" title="Alejar">🔍−</button>
+      <button class="tool-btn" (click)="fitView()" title="Ajustar vista">
+        ⊞
+      </button>
+      <button class="tool-btn" (click)="zoomIn()" title="Acercar">🔍+</button>
+    </div>
+
+    <div class="toolbar-right">
+      <button class="btn-xml" (click)="toggleXml()">
+        {{ showXml ? "Ocultar XML" : "Ver XML" }}
+      </button>
+      <button class="btn-save" (click)="saveXml()" [disabled]="isSaving">
+        @if (isSaving) {
+          <span class="spinner"></span>
+        } @else if (savedSuccess) {
+          ✓ Guardado
+        } @else {
+          💾 Guardar
+        }
+      </button>
+    </div>
+  </div>
+
+  <div class="editor-body">
+    <div class="canvas-container">
+      @if (isLoading) {
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <span>Cargando editor...</span>
+        </div>
+      }
+      <div #canvas class="bpmn-canvas"></div>
+    </div>
+
+    @if (showXml) {
+      <div class="xml-panel">
+        <div class="xml-header">
+          <span>BPMN XML — listo para enviar al backend</span>
+          <button class="close-xml" (click)="showXml = false">✕</button>
+        </div>
+        <pre class="xml-content">{{ xmlContent }}</pre>
+      </div>
+    }
+  </div>
+
+  @if (savedSuccess) {
+    <div class="toast">✓ Política guardada correctamente</div>
+  }
+</div>
